@@ -1,0 +1,12 @@
+print ("Welcome to Sanjay' s Koala party!")
+print ("It ' s possible sanjay can distribute  ", 12)
+print (" cookies for each bowl.")
+# This will get you by for now: 
+print ("There are ", 28, " pepole in this room.") ;
+print ("Your total money spent is: ", (2.75+9.32+11.91))
+# Using print is far more flexible. It uses 
+# a format specifier %d to tell it to place an integer 
+# there, but you also have to indicate the actual variable
+# after your quote: 
+# %d is a format specifier for type int print ("There are %d people in this room." % 28)
+# %d is a format specifier for type double print 
