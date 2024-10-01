@@ -1,0 +1,15 @@
+print("Make a choice from the following menu: ")
+print("A: apples")
+print("B: bananas")
+print("C: cherries")
+print("E: Elderberry")
+ch = input("Your choice: ")
+
+if (ch == "A"):
+    print("I prefer apples")
+elif (ch == "B"):
+    print("I prefer bananas")
+else:
+    print("I prefer cherries")
+if (ch == "E"):
+    print("I prefer Eldeberry")
