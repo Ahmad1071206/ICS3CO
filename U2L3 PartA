@@ -1,0 +1,13 @@
+count = 9
+while (count != 0):
+    print(count)
+    count -= 1
+# This code starts with count = 9, and enters a while loop that prints the value of count until count is no longer not equal to 0. The code decreases `count` by 1 in each iteration, and prints the result.
+
+
+count = 9
+while (count != 0):
+    count -= 1
+    print(count)
+# This new code will now decrease count first and then print the new value.
+
