@@ -1,0 +1,28 @@
+items = ["Apples", "Bananas", "Cherries", "Dosa"]
+sizes = []
+for i in range(len(items)): # Predict A: State the purpose
+    sizeI = len(items[i])
+    sizes.append(sizeI)
+
+for i in range(len(sizes)): # Predict B: State the output
+    print("%d %s" % (sizes[i], items[i]))
+
+
+
+# Modify
+
+items = ["Apples", "Bananas", "Cherries", "Dosa"]
+sizes = []
+
+# Loop to calculate the length of each item and store in sizes list
+for i in range(len(items)):
+    sizeI = len(items[i])
+    sizes.append(sizeI)
+
+# Loop to print the size and corresponding item
+for i in range(len(sizes)):
+    print("%d %s" % (sizes[i], items[i]))
+
+
+for i in range(len(items)):
+    print(sizes[i] == len(items[i]))
