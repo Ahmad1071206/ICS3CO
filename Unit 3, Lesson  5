@@ -1,0 +1,14 @@
+def add(a, b):
+    try:
+        a = float(a)
+        b = float(b)
+        return (a + b) * 2  # Multiplying the sum by 2
+    except ValueError:
+        return "Both inputs must be numbers."
+
+# Accepting input the user
+a = input("Enter the first number: ")
+b = input("Enter the second number: ")
+
+# Call  function  display the result
+print(add(a, b))
