@@ -1,0 +1,68 @@
+def validate(S):
+    
+    valid_nucleotides = {'C', 'G', 'A', 'T'}
+    errors = []
+
+   
+    for index, nucleotide in enumerate(S):
+        if nucleotide not in valid_nucleotides:
+            
+            errors.append(f"{nucleotide} found in position {index + 1}.")
+
+  
+    if errors:
+        for error in errors:
+            print(f"Not valid: {error}")
+        return False
+
+   
+    return True
+
+# Main program
+# Sample inputs
+sequences = [
+    "ATCAAGGCCTATTCCGGGAAAGG",
+    "TAGWGTGAAGTGCCATAGTT",
+    "CGCAGATGCCGCTGGTATGA",
+    "ATAGGTTAGCGGACCGAGAC"
+]
+
+for seq in sequences:
+    if validate(seq):
+        print("valid")
+    else:
+        print("Not valid")ef validate(S):
+    
+    valid_nucleotides = {'C', 'G', 'A', 'T'}
+    errors = []
+
+    
+    for index, nucleotide in enumerate(S):
+        if nucleotide not in valid_nucleotides:
+        
+            errors.append(f"{nucleotide} found in position {index + 1}.")
+
+    
+    if errors:
+        for error in errors:
+            print(f"Not valid: {error}")
+        return False
+
+    # If there are no errors, return True
+    return True
+
+# Main program
+# Sample inputs
+sequences = [
+    "ATCAAGGCCTATTCCGGGAAAGG",
+    "TAGWGTGAAGTGCCATAGTT",
+    "CGCAGATGCCGCTGGTATGA",
+    "ATAGGTTAGCGGACCGAGAC"
+]
+
+
+for seq in sequences:
+    if validate(seq):
+        print("valid")
+    else:
+        print("Not valid")
