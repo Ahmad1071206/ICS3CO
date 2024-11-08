@@ -1,0 +1,60 @@
+# Author : Ahmad.Nasaj
+# Student Number : 1071026
+# Revision date: 31 october 2024
+# Program: Yearbook Layout Program
+# Description: This program calculates  smallest perimeter and best layout dimensions
+# for arranging  set number of photos.
+
+# VARIABLE DICTIONARY:
+
+# smallest_perimeter (float): The smallest perimeter found  layout.
+# optimal_dimensions (tuple): The best layout dimensions (width and height) with  smallest perimeter.
+# w (int): Posible width for the layout.
+# h (int): Calculated height based on width and total photos.
+# perimeter (int): Th perimeter for each layout configuration.
+# input_value (str): User input for the number of photos.
+# photo_count (int): The number  photos arrange, converted from user input.
+# width (int): The best width f the layout with the smallest perimeter.
+# height (int): The best height for the layout with the smallest perimeter
+# This program helps arrange school yearbook photos in rectangle with the smallest possible perimeter.
+# This tool useful for organizing photos with minimal border space.
+
+
+import math
+def calculate_min_perimeter_dimensions(total_photos):
+    # Start withlarge value for perimeter and default dimensions
+    smallest_perimeter = float('inf')
+    optimal_dimensions = (1, total_photos)
+    # Loop through potential widths up the square root of total_photos
+    for w in range(1, int(math.sqrt(total_photos)) + 1):
+        if total_photos % w == 0:
+            # Calculate the height  matches this width
+            h = total_photos // w
+            perimeter = 2 * (w + h)
+            # Check if this perimeter is  smallest found so far
+            if perimeter < smallest_perimeter:
+                smallest_perimeter = perimeter
+                optimal_dimensions = (w, h)
+    return smallest_perimeter, optimal_dimensions
+def main_program():
+    print("Welcome to the Yearbook Layout Program!")
+    while True:
+        # Prompt user for input
+        input_value = input("Enter the number of photos: ")
+        # Check if  user wants to end program
+        if input_value.lower() == "done":
+            print("Goodbye!")
+            break
+        # Attempt to convert the input to a number and validate it
+        try:
+            photo_count = int(input_value)
+            if photo_count <= 0:
+                print(f"{photo_count} is not a valid input. Please enter a positive number.")
+                continue
+            # Calculate optimal dimensions the specified photo count
+            smallest_perimeter, (width, height) = calculate_min_perimeter_dimensions(photo_count)
+            print(f"The smallest perimeter is {smallest_perimeter} with dimensions {width} x {height}.")
+        except ValueError:
+            print("Invalid input. Please enter a positive integer or 'done' to exit.")
+if __name__ == "__main__":
+    main_program()
