@@ -1,0 +1,33 @@
+def generate_pythagorean_triples(limit):
+    # Initialize an empty list to store the generated triples
+    triples = []
+
+    # Loop through each integer n from 3 up to the given limit
+    for n in range(3, limit + 1):
+        # Check if n is odd
+        if n % 2 == 1:  # n is odd
+            # For odd n, use the formulas to calculate a, b, and c
+            a = n
+            b = (n**2 - 1) // 2
+            c = (n**2 + 1) // 2
+        else:  # n is even
+            # For even n, use the different formulas to calculate a, b, and c
+            a = n
+            m = n // 2
+            b = m**2 - 1
+            c = m**2 + 1
+
+        # Append the generated triple [a, b, c] to the list of triples
+        triples.append([a, b, c])
+
+    # Return the complete list of Pythagorean triples
+    return triples
+
+# Test the function with a limit, e.g., 12
+upper_limit = 12
+triples = generate_pythagorean_triples(upper_limit)
+
+# Print each triple and show the verification that a^2 + b^2 = c^2
+for triple in triples:
+    a, b, c = triple
+    print(f"[{a}, {b}, {c}] => {a}^2 + {b}^2 = {c}^2 = {a**2 + b**2}")
