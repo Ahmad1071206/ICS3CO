@@ -1,0 +1,23 @@
+import turtle
+
+t = turtle.Turtle()
+# Drawing a triangle
+
+for _ in range(3):
+
+    t.forward(100)
+
+    t.left(120)
+turtle.done()
+
+# Modify 
+
+import turtle
+t = turtle.Turtle()
+# Introducing an error in the angle
+
+for _ in range(3):
+
+    t.forward(100)
+
+    t.left(123)
