@@ -1,0 +1,12 @@
+import turtle
+
+
+t = turtle.Turtle()
+# Moving to position (100, 100) without drawing
+t.penup()
+t.goto(100, 100)
+# Plotting the point
+
+t.dot(20, "red")
+
+turtle.done() 
