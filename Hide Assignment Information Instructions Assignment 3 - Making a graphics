@@ -1,0 +1,60 @@
+import turtle
+
+def initialize_turtle():
+    turtle.bgcolor("gray40")  # Set background color
+    turtle.tracer(0, 0)       # Disable screen updates for faster plotting
+    t = turtle.Turtle()       # Create a turtle object
+    t.hideturtle()            # Hide the turtle cursor
+    return t
+
+def plotIt(t, x, y, d, color):
+    t.penup()              # Raise the pen
+    t.goto(x, y)           # Move to the specified position
+    t.pendown()            # Lower the pen
+    t.dot(d, color)        # Draw the dot
+    t.penup()              # Raise the pen again
+
+def parse_file(filename):
+    with open(filename, 'r') as file:
+        lines = file.readlines()
+
+    # Parse the header
+    header = lines[0].strip().split()
+    cols, rows, num_colors = map(int, header)
+
+    # Parse the color definitions
+    color_map = {}
+    for i in range(1, num_colors + 1):
+        sym, _, color = lines[i].strip().split()
+        color_map[sym] = color
+
+    # Parse the image data
+    image_data = lines[num_colors + 1 : num_colors + 1 + rows]
+
+    return cols, rows, color_map, image_data
+
+def plot_image(t, cols, rows, color_map, image_data):
+    x_offset = -cols // 2
+    y_offset = rows // 2
+
+    for y, line in enumerate(image_data):
+        for x, char in enumerate(line.strip()):
+            if char in color_map:
+                plotIt(t, x + x_offset, y_offset - y, 4, color_map[char])
+
+def main():
+    filename = "rocky_bullwinkle_mod.xpm"
+    rotate = input("Would you like to rotate the image? (yes/no): ").lower() == 'yes'
+
+    cols, rows, color_map, image_data = parse_file(filename)
+
+    if rotate:
+        image_data = ["".join(reversed(line)) for line in reversed(image_data)]
+
+    t = initialize_turtle()
+    plot_image(t, cols, rows, color_map, image_data)
+
+    turtle.update()  # Refresh the screen
+    turtle.done()    # Wait for the user to close the window
+
+main()
