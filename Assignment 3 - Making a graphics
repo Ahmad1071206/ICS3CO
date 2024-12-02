@@ -1,0 +1,118 @@
+import turtle
+import os
+
+# Setup turtle graphics
+turtle.bgcolor("gray40")  # Background color of the turtle window
+turtle.tracer(0, 0)  # Turns off the automatic drawing updates for performance
+t = turtle.Turtle()  # Create a turtle object for drawing
+t.hideturtle()  # Hide the turtle cursor to make it a clean drawing
+
+def modify(ln):
+    """Function to remove bad characters from a line."""
+    mod_string = ""
+    badChars = ['"', ',']
+    ln = ln.strip()
+    for c in ln:
+        if c not in badChars:
+            mod_string += c
+    return mod_string
+
+def plotIt(T, x, y, d, color):
+    """Function to plot a dot at coordinates (x, y) with a given color."""
+    T.penup()
+    T.goto(x, y)
+    T.pendown()
+    T.dot(d, color)  # Draw a dot with the specified size and color
+    T.penup()
+
+def drawImage(img, pixel_size, rows, cols, x_rot, y_rot):
+    """Function to draw the image using the given pixel size, rows, and columns."""
+    x_half = -cols // 2
+    y_half = rows // 2  # Start from the top row
+    for y in range(len(img)):
+        x_half = -cols // 2  # Reset x position for each row
+        for x in range(len(img[y])):
+            plotIt(t, x_half * pixel_size * x_rot, y_half * pixel_size * y_rot, pixel_size, img[y][x])
+            x_half += 1
+        y_half -= 1  # Move down to the next row
+    turtle.update()  # Update the screen after the drawing is done
+
+def getImageData(fh, rows, cols, colorDefs, numColors):
+    """Function to read the image data and convert it into the correct colors."""
+    imageData = []
+    for i in range(rows):
+        row = fh.readline()
+        row = modify(row)
+        rowArr = []
+        for j in range(len(row)):
+            color = row[j]
+            for k in range(numColors):
+                if color == colorDefs[k][0]:
+                    color = colorDefs[k][1]
+            rowArr.append(color)
+        imageData.append(rowArr)
+    return imageData
+
+def getColorData(fh, numColors):
+    """Function to read the color definitions."""
+    colorDefs = []
+    for i in range(numColors):
+        colorLine = fh.readline()
+        colorLine = modify(colorLine)
+        try:
+            sym, c, color = colorLine.split()  # Parse the symbol, color, and color name
+            if sym == '~':
+                sym = ' '  # Replace the tilde symbol with a space
+            colorDefs.append([sym, color])
+        except ValueError:
+            print(f"Error parsing color definition on line {i + 1}: {colorLine}")
+            exit()  # Exit the program if the format is incorrect
+    return colorDefs
+
+# Main logic to get user input and process the image
+filename = ""
+rotate = False
+
+# Ask the user to choose the file (either smiley or rocky)
+while not filename:
+    user_input = input("Choose an option: \n A: rocky_bullwinkle_mod.xpm \n B: smiley_emoji_mod.xpm \n")
+    if user_input.lower() == 'a':
+        filename = "rocky_bullwinkle_mod.xpm"
+    elif user_input.lower() == 'b':
+        filename = "smiley_emoji_mod.xpm"
+
+# Check if the file exists, and prompt the user if it doesn't
+if not os.path.exists(filename):
+    print(f"Error: File '{filename}' not found.")
+    exit()
+
+# Ask the user if they want to rotate the image
+user_input = input("Would you like to rotate the image (Y/N): ")
+rotate = user_input.lower() == 'y'
+
+# Open the selected file and read its contents
+with open(filename, "r") as fh:
+    # Read and modify the first line (color data)
+    colorData = modify(fh.readline())
+    rows, cols, numColors = map(int, colorData.split()[:3])  # Extract rows, columns, and numColors
+
+    # Read color definitions and image data
+    colorDefs = getColorData(fh, numColors)
+    imageData = getImageData(fh, rows, cols, colorDefs, numColors)
+
+# Print dimensions and color information for debugging
+print("\nDimensions: %d x %d" % (rows, cols))
+print("Number of colors:", numColors)
+print("Colors:", colorDefs)
+
+# Draw the image with or without rotation
+if rotate:
+    drawImage(imageData, 4, rows, cols, -1, -1)  # Flip the image horizontally and vertically
+else:
+    drawImage(imageData, 4, rows, cols, 1, 1)  # Display the image without rotation
+
+# Wait for the user to close the turtle window
+try:
+    turtle.done()
+except turtle.Terminator:
+    print("Turtle window closed.")
