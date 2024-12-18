@@ -1,106 +1,78 @@
 import bisect
 
-# Helper function to convert month abbreviation to number.
-def month_to_number(month):
-    months = {
-        "Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6,
-        "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12
-    }
-    return months.get(month, 0)
-
-# Merge date components into a single integer.
 def merge(day, month, year):
-    day = f"{int(day):02}"  # Ensure day is 2-digit
-    month_num = month_to_number(month)
-    if not month_num:
-        raise ValueError(f"Invalid month: {month}")
-    return int(f"{year}{month_num:02}{day}")
+    month_map = {
+        "Jan": "01", "Feb": "02", "Mar": "03", "Apr": "04",
+        "May": "05", "Jun": "06", "Jul": "07", "Aug": "08",
+        "Sep": "09", "Oct": "10", "Nov": "11", "Dec": "12"
+    }
+    return int(f"{year}{month_map[month]}{day}")
 
-# Load data from file into arrays.
-def load_data(file_name):
-    dates = []
-    words = []
-    try:
-        with open(file_name, "r") as file:
-            for line in file:
-                parts = line.strip().split()
-                if len(parts) == 4:
-                    mon, day, year, word = parts
-                    try:
-                        date = merge(day, mon, year)
-                        dates.append(date)
-                        words.append(word.upper())
-                    except ValueError as e:
-                        print(f"Skipping invalid line: {line.strip()} ({e})")
-    except FileNotFoundError:
-        print(f"Error: File '{file_name}' not found.")
-    return dates, words
-
-# Sort words alphabetically while keeping dates aligned.
-def sort_words_and_dates(words, dates):
+def sort(words, dates):
     combined = sorted(zip(words, dates))
-    words[:], dates[:] = zip(*combined)
+    sorted_words, sorted_dates = zip(*combined)
+    return list(sorted_words), list(sorted_dates)
 
-# Search for a word and return the corresponding date.
-def search_word(word, words, dates):
-    idx = bisect.bisect_left(words, word.upper())
-    if idx < len(words) and words[idx] == word.upper():
-        return dates[idx]
+def isMatch(word, words, dates):
+    index = bisect.bisect_left(words, word)
+    if index < len(words) and words[index] == word:
+        return dates[index]
     return 0
 
-# Search for a date and return the corresponding word.
-def search_date(date, dates, words):
-    idx = bisect.bisect_left(dates, date)
-    if idx < len(dates) and dates[idx] == date:
-        return words[idx]
+def wordByDate(date, dates, words):
+    if date in dates:
+        return words[dates.index(date)]
     return None
 
-# Main program loop.
+def loadDatabase(filename):
+    words, dates = [], []
+    with open(filename, "r") as file:
+        for line in file:
+            month, day, year, word = line.strip().split()
+            date = merge(day, month, year)
+            dates.append(date)
+            words.append(word)
+    words, dates = sort(words, dates)
+    return words, dates
+
 def main():
-    file_name = "wordle.dat"
-    dates, words = load_data(file_name)
-    if not dates or not words:
-        print("No data loaded. Exiting program.")
-        return
-
-    sort_words_and_dates(words, dates)
-
     print("Welcome to the Wordle Database!")
+    words, dates = loadDatabase("wordle.dat")
+
     while True:
-        choice = input("Enter 'w' to search by word, 'd' to search by date, or 'q' to quit: ").lower()
+        choice = input("Enter 'w' to search by word, or 'd' to search by date (or 'q' to quit): ").lower()
+
         if choice == 'q':
             break
-
-        if choice == 'w':
-            word = input("What word are you looking for? ").upper()
-            result_date = search_word(word, words, dates)
-            if result_date:
-                print(f"The word {word} was the solution to the puzzle on {result_date}.")
+        elif choice == 'w':
+            search_word = input("What word are you looking for? ").upper()
+            date = isMatch(search_word, words, dates)
+            if date:
+                print(f"The word {search_word} was the solution to the puzzle on {date}.")
             else:
-                print(f"{word} was not found in the database.")
-
+                print(f"{search_word} was not found in the database.")
         elif choice == 'd':
-            try:
-                year = int(input("Enter the year: "))
-                month = input("Enter the month (3-letter abbreviation, e.g., 'Jan'): ")
-                day = int(input("Enter the day: "))
-                date = merge(day, month, year)
+            year = input("Enter the year: ")
+            month = input("Enter the month (3-letter abbreviation, e.g., 'Jan'): ")
+            day = input("Enter the day: ")
 
+            try:
+                date = merge(day.zfill(2), month.capitalize(), year)
                 if date < 20210619:
                     print(f"{date} is too early. No Wordles occurred before 20210619.")
                 elif date > 20240421:
                     print(f"{date} is too recent. Our records only go as late as 20240421.")
                 else:
-                    result_word = search_date(date, dates, words)
-                    if result_word:
-                        print(f"The word entered on {date} was {result_word}.")
+                    word = wordByDate(date, dates, words)
+                    if word:
+                        print(f"The word entered on {date} was {word}.")
                     else:
-                        print(f"No word found for the date {date}.")
-
-            except ValueError:
-                print("Invalid input. Please ensure all date components are correct.")
+                        print(f"No word found for {date}.")
+            except KeyError:
+                print("Invalid month entered.")
         else:
-            print("Invalid choice. Please enter 'w', 'd', or 'q'.")
+            print("Invalid option. Please enter 'w', 'd', or 'q'.")
 
 if __name__ == "__main__":
     main()
+
