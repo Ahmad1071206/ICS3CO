@@ -1,3 +1,17 @@
+#Author: Ahmad Nasaj
+#Student number : 1071026
+#Date : 12/19/2024
+
+#merge(): Combines day, month, and year into a single number (YYYYMMDD) to make sorting easy.
+#sort(): Sorts words and their dates together alphabetically by the word.
+#Match(): Checks if a word exists and gives its date if found.
+#wordByDate(): Finds the word for a given date if it exists.
+#loadDatabase(): Reads words and dates from a file, converts them, and sorts them.
+#main(): Lets the user search by word or date and shows results or errors.
+
+
+
+# Convert date into an integer format YYYYMMDD for sorting
 import bisect
 
 def merge(day, month, year):
@@ -8,22 +22,26 @@ def merge(day, month, year):
     }
     return int(f"{year}{month_map[month]}{day}")
 
+# Sort words and dates together
 def sort(words, dates):
     combined = sorted(zip(words, dates))
     sorted_words, sorted_dates = zip(*combined)
     return list(sorted_words), list(sorted_dates)
 
+# Find date for a given word
 def isMatch(word, words, dates):
     index = bisect.bisect_left(words, word)
     if index < len(words) and words[index] == word:
         return dates[index]
     return 0
 
+# Find word for a given date
 def wordByDate(date, dates, words):
     if date in dates:
         return words[dates.index(date)]
     return None
 
+# Load database from file
 def loadDatabase(filename):
     words, dates = [], []
     with open(filename, "r") as file:
@@ -35,6 +53,7 @@ def loadDatabase(filename):
     words, dates = sort(words, dates)
     return words, dates
 
+# Main function to interact with the user
 def main():
     print("Welcome to the Wordle Database!")
     words, dates = loadDatabase("wordle.dat")
@@ -75,4 +94,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
